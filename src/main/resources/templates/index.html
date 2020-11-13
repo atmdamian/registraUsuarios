@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${titulo}"></title>
+<link rel="stylesheet" href="./css/bootstrap.css">
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+	<h1>Spring boot Softtek</h1>
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Registra Usuarios</h1>
+		</div>
+		<div class="container">
+			<div class="card">
+				<div class="card-body">
+					<form ><!--  th:action="@{/index}" method="post" -->
+						<div>
+							<label for="nombre">Nombre Usuario </label>
+							<div>
+								<input type="text" name="nombre" id="nombre"
+									class="input form-control" required>
+							</div>
+							<div th:if="${error != null && error.containsKey(nombre)}" th:text="${error.nombre}"></div>
+						</div>
+
+						<div>
+							<label for="correo">Correo Usuario</label>
+							<div>
+								<input type="email" name="email" id="email"
+									class="input form-control">
+							</div>
+						</div>
+
+						<div>
+							
+							<div>
+								<label for="estatus">Estatus:</label> 
+								<select name="estatus" id="estatus">
+									<option value="ACTIVO">ACTIVO</option>
+									<option value="INACTIVO">INACTIVO</option>
+									<option value="SUSPENDIDO">SUSPENDIDO</option>									
+								</select>
+							</div>
+						</div>
+
+
+						<div class="form-group col-md-6">
+							 <button type="button" id="btn-submit" class="btn btn-primary"
+								onclick="registroUsuario();">Enviar</button> 
+								
+								<!--<input type="submit" value="Enviar">-->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container">
+		<table id="tableUsuarios" class="table table-bordered table-striped">
+			<thead clas="thead-light">
+				<tr>
+					<th scope="coll">Nombre</th>
+					<th scope="coll">Email</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+</body>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		TablaUsuarios()
+	});
+	var nombre;
+	var email;
+	var estatus;
+
+	function registroUsuario() {
+		var datos = {
+				
+			nombre : document.getElementById("nombre").value,
+			email : document.getElementById("email").value,
+			estatus: document.getElementById("estatus").value,
+		};
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			//dataType : 'json',
+			url : "postRegistrarUsuario",
+			data : JSON.stringify(datos),
+			success : function(response) {
+				TablaUsuarios()
+				$(".input").val("");
+			},
+			error : function() {
+				console.log('Error al insertar');
+			}
+		});
+
+	}
+	function TablaUsuarios() {
+		$.ajax({
+			url : "/api/reportes/getUsuario",
+			data : {},
+			success : function(data) {
+				var dataJSON = data;
+				dataJSON = JSON.parse(dataJSON);
+				var tablaUsuario = '';
+				if (jQuery.isEmptyObject(dataJSON)) {
+					$("#tableUsuarios tbody").html('');
+				} else {
+					for (var i = 0; i < dataJSON.length; i++) {
+						tablaUsuario += '<tr>' + '<td>' + dataJSON[i].nombre
+								+ '</td>' + '<td>' + dataJSON[i].email
+								+ '</td>' + '<td>' + dataJSON[i].estatus
+								+ '</td>' + '<td>' + dataJSON[i].fechaDeRegistro.date.year +"/"+dataJSON[i].fechaDeRegistro.date.month+"/"+dataJSON[i].fechaDeRegistro.date.day +" "+dataJSON[i].fechaDeRegistro.time.hour+":"+dataJSON[i].fechaDeRegistro.time.minute+":"+dataJSON[i].fechaDeRegistro.time.second
+								+ '</td>' + '</tr>';
+						$("#tableUsuarios tbody").html(tablaUsuario);
+					}
+				}
+			}
+		});
+	}
+</script>
+</html>

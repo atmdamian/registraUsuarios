@@ -1,0 +1,1 @@
+INSERT INTO usuarios(id, nombre, email,fecha_registro,estatus) VALUES ( 1, 'DAMIAN ATANACIO MENDIOLA','DAMIAN.ATANACIO@SOFTTEK.COM','2020-11-11 01:18:36', 'ACTIVO')

@@ -12,102 +12,72 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	@NotEmpty
 	private String nombre;
 	@NotEmpty
 	private String email;
-	/*@Temporal NO ES COMPATIBLE CON LOCALDATETIME
-	 * solo se puede aplicar a atributos de tipo java.util.Date y java.util.Calendar .
-	@Temporal(TemporalType.TIMESTAMP)*/
-	@Column(name="fecha_registro")
+	@Column(name = "fecha_registro")
 	@Convert(converter = LocalDateTimeAttributeConverter.class)
 	private LocalDateTime fechaDeRegistro;
-	
+
 	@Enumerated(EnumType.STRING)
 	private Estatus estatus;
 
-	
-	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-
-
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-
-
 
 	public String getNombre() {
 		return nombre;
 	}
 
-
-
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
-
 
 	public String getEmail() {
 		return email;
 	}
 
-
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-
 
 	public LocalDateTime getFechaDeRegistro() {
 		return fechaDeRegistro;
 	}
 
-
-
 	public void setFechaDeRegistro(LocalDateTime fechaDeRegistro) {
 		this.fechaDeRegistro = fechaDeRegistro;
 	}
-
-
 
 	public Estatus getEstatus() {
 		return estatus;
 	}
 
-
-
 	public void setEstatus(Estatus estatus) {
 		this.estatus = estatus;
 	}
 
-
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
-
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 }

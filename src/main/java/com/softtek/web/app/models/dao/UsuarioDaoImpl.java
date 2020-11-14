@@ -1,5 +1,6 @@
 package com.softtek.web.app.models.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,34 +10,67 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softtek.web.app.models.entity.Usuario;
-/*marca la clase como un bean de acceso a datos, 
-traduce con detalle las exceptiones*/
+
 @Repository
-public class UsuarioDaoImpl implements IUsuarioDao {
-	//maneja las clases entity, ciclo de vida, persiste, actualiza,elimina
-	//todas las operaciones a la base pero a nivel objeto entity.
+public class UsuarioDaoImpl implements UsuarioDao {
+
 	@PersistenceContext
 	private EntityManager em;
-	
+
 	@SuppressWarnings("unchecked")
-	/*marca el metodo transaccional de lectura. 
-	toma el contenido del metodo iy lo envuelve dentro de una transaccion*/
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	@Override
 	public List<Usuario> findAll() {
-		// TODO Auto-generated method stub
-		return em.createQuery("from Usuario").getResultList();
+		return em.createQuery("from Usuario AS us ORDER BY us.fechaDeRegistro DESC").getResultList();
 	}
-	/*
-	 * Toma el objeto usuario y lo guarda dentro del contxto de persistencia JPA
-	 * una ves que se realiza en commit y flush sincroniza con la vase de datos y reliza el insetrt auotmaticamente
-	 * */
+
 	@Override
-	//se marca el metodo de tipo escritutra
 	@Transactional
 	public void save(Usuario usuario) {
-		em.persist(usuario);
+		//try {
+		   //em.getTransaction().begin();
+		      em.persist(usuario);
+		   //em.getTransaction().commit();
+		  //}
+		  //finally {
+		    //if (em.getTransaction().isActive())
+		    //em.getTransaction().rollback();
+		 // }
 		
+	}
+
+	@Override
+	@Transactional
+	public void update(Usuario usuario) {
+		try {
+			em.getTransaction().begin();
+			em.merge(usuario);
+			em.getTransaction().commit();
+		}finally {
+			if(em.getTransaction().isActive())
+				em.getTransaction().rollback();
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public void delete(Integer idUsuario) {
+		//try {
+			Usuario usuarioEliminar = em.find(Usuario.class, idUsuario);
+			//em.getTransaction().begin();
+			em.remove(usuarioEliminar);
+			//em.getTransaction().commit();
+			
+		//}finally {
+			//em.getTransaction().isActive();
+			//em.getTransaction().rollback();
+		//}
+	}
+
+	@Override
+	public Usuario findOne(Integer idUsuario) {
+		return em.find(Usuario.class, idUsuario);
 	}
 
 }

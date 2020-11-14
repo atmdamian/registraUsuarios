@@ -15,14 +15,16 @@
 		<div class="container">
 			<div class="card">
 				<div class="card-body">
-					<form ><!--  th:action="@{/index}" method="post" -->
+					<form>
+						<!--  th:action="@{/index}" method="post" -->
 						<div>
 							<label for="nombre">Nombre Usuario </label>
 							<div>
 								<input type="text" name="nombre" id="nombre"
 									class="input form-control" required>
 							</div>
-							<div th:if="${error != null && error.containsKey(nombre)}" th:text="${error.nombre}"></div>
+							<div th:if="${error != null && error.containsKey(nombre)}"
+								th:text="${error.nombre}"></div>
 						</div>
 
 						<div>
@@ -34,23 +36,23 @@
 						</div>
 
 						<div>
-							
+
 							<div>
-								<label for="estatus">Estatus:</label> 
-								<select name="estatus" id="estatus">
+								<label for="estatus">Estatus:</label> <select name="estatus"
+									id="estatus">
 									<option value="ACTIVO">ACTIVO</option>
 									<option value="INACTIVO">INACTIVO</option>
-									<option value="SUSPENDIDO">SUSPENDIDO</option>									
+									<option value="SUSPENDIDO">SUSPENDIDO</option>
 								</select>
 							</div>
 						</div>
 
 
 						<div class="form-group col-md-6">
-							 <button type="button" id="btn-submit" class="btn btn-primary"
-								onclick="registroUsuario();">Enviar</button> 
-								
-								<!--<input type="submit" value="Enviar">-->
+							<button type="button" id="btn-submit" class="btn btn-primary"
+								onclick="registroUsuario();" >Enviar</button>
+
+							<!--<input type="submit" value="Enviar">-->
 						</div>
 					</form>
 				</div>
@@ -63,8 +65,12 @@
 		<table id="tableUsuarios" class="table table-bordered table-striped">
 			<thead clas="thead-light">
 				<tr>
-					<th scope="coll">Nombre</th>
+					<th scope="coll">ID</th>
 					<th scope="coll">Email</th>
+					<th scope="coll">Nombre</th>
+					<th scope="coll">Estatus</th>
+					<th scope="coll">Fecha y Hora</th>
+					
 				</tr>
 			</thead>
 			<tbody>
@@ -83,11 +89,11 @@
 	var estatus;
 
 	function registroUsuario() {
+		
 		var datos = {
-				
 			nombre : document.getElementById("nombre").value,
 			email : document.getElementById("email").value,
-			estatus: document.getElementById("estatus").value,
+			estatus : document.getElementById("estatus").value,
 		};
 		$.ajax({
 			type : "POST",
@@ -96,37 +102,150 @@
 			url : "postRegistrarUsuario",
 			data : JSON.stringify(datos),
 			success : function(response) {
-				TablaUsuarios()
+				TablaUsuarios();
 				$(".input").val("");
 			},
-			error : function() {
-				console.log('Error al insertar');
-			}
+            error: function(){
+            	
+            },
+            	async: true, 
+            	cache: false 
 		});
 
 	}
 	function TablaUsuarios() {
-		$.ajax({
+		
+	
+		$
+				.ajax({
+					url : "/api/reportes/getUsuario",
+					data : {},
+					success : function(data) {
+						var dataJSON = data;
+						dataJSON = JSON.parse(dataJSON);
+						var tablaUsuario = '';
+						if (jQuery.isEmptyObject(dataJSON)) {
+							$("#tableUsuarios tbody").html('');
+						} else {
+							for (var i = 0; i < dataJSON.length; i++) {
+								var idTrNombre = "nombre"+dataJSON[i].id;
+								var idTrEmail = "email"+dataJSON[i].id;
+								var idTrEstatus = "estatus"+dataJSON[i].id;
+								var modificaBtn = "botonModificar"+dataJSON[i].id;
+								var modificaTd = "tdModificar"+dataJSON[i].id;
+								var eliminaBtn = "botonEliminar"+dataJSON[i].id;
+								tablaUsuario += '<tr>' + '<td>'
+										+ dataJSON[i].id
+										+ '</td>'
+								        + '<td id='+ idTrNombre +'>'
+										+ dataJSON[i].nombre
+										+ '</td>'
+										+ '<td id='+ idTrEmail +'>'
+										+ dataJSON[i].email
+										+ '</td>'
+										+ '<td id='+ idTrEstatus +'>'
+										+ dataJSON[i].estatus
+										+ '</td>'
+										+ '<td>'
+										+ dataJSON[i].fechaDeRegistro.date.year
+										+ "/"
+										+ dataJSON[i].fechaDeRegistro.date.month
+										+ "/"
+										+ dataJSON[i].fechaDeRegistro.date.day
+										+ " "
+										+ dataJSON[i].fechaDeRegistro.time.hour
+										+ ":"
+										+ dataJSON[i].fechaDeRegistro.time.minute
+										+ ":"
+										+ dataJSON[i].fechaDeRegistro.time.second
+										+ '</td>'
+										+ '<td id='+modificaTd+'>'
+										+ '<a id="'+modificaBtn+'" class="btn btn-primary" onclick="modificarUsuario(this)" data-value="'
+										+ dataJSON[i].id
+										+ '">  Editar  </a>'
+										+ '</td>'
+										+ '<td>'
+										+ '<a id="'+eliminaBtn+'" class="btn btn-danger" onclick="eliminarUsuario(this)" data-value="'
+										+ dataJSON[i].id + '"> Eliminar </a>'
+										+ '</td>'
+
+										+ '</tr>';
+								$("#tableUsuarios tbody").html(tablaUsuario);
+							}
+						}
+					},
+		            error: function(){
+		            	
+		            },
+		            	async: true, 
+		            	cache: false 
+				});
+	}
+
+	function modificarUsuario(id) {
+		var idUsuario = $(id).data('value');
+		$
+		.ajax({
 			url : "/api/reportes/getUsuario",
 			data : {},
 			success : function(data) {
 				var dataJSON = data;
 				dataJSON = JSON.parse(dataJSON);
-				var tablaUsuario = '';
+				var tablaUsuarioTr = '';
 				if (jQuery.isEmptyObject(dataJSON)) {
 					$("#tableUsuarios tbody").html('');
 				} else {
 					for (var i = 0; i < dataJSON.length; i++) {
-						tablaUsuario += '<tr>' + '<td>' + dataJSON[i].nombre
-								+ '</td>' + '<td>' + dataJSON[i].email
-								+ '</td>' + '<td>' + dataJSON[i].estatus
-								+ '</td>' + '<td>' + dataJSON[i].fechaDeRegistro.date.year +"/"+dataJSON[i].fechaDeRegistro.date.month+"/"+dataJSON[i].fechaDeRegistro.date.day +" "+dataJSON[i].fechaDeRegistro.time.hour+":"+dataJSON[i].fechaDeRegistro.time.minute+":"+dataJSON[i].fechaDeRegistro.time.second
-								+ '</td>' + '</tr>';
-						$("#tableUsuarios tbody").html(tablaUsuario);
+						var indice=dataJSON[i].id;
+						if( indice == idUsuario){
+							
+							$("#nombre"+idUsuario).html('<td><input type="text" id="nombre" value="'+dataJSON[i].nombre+'"><td/>');
+							$("#email"+idUsuario).html('<td><input type="text" id="email" value="'+dataJSON[i].email+'"><td/>');
+							$("#estatus"+idUsuario).html('<td><input type="text" id="estatus" value="'+dataJSON[i].estatus+'"><td/>');
+							$("#tdModificar"+idUsuario).html('<a class="btn btn-success" onclick="actualizaUsuario(this);" data-value="'+ dataJSON[i].id+'">  Guardar </a>');
+							$('#botonEliminar'+idUsuario).attr("disabled", true);
+
+						}else{
+							$('#botonModificar'+indice).attr("disabled", true);
+							$('#botonEliminar'+indice).attr("disabled", true);
+						}
+						
 					}
 				}
-			}
+			},
+            error: function(){
+            	
+            },
+            	async: true, 
+            	cache: false 
 		});
+
 	}
+	function eliminarUsuario(id) {
+		var idUsuario = $(id).data('value');
+		console.log("Eliminar", idUsuario);
+		$.ajax({
+			type : "GET",
+            url: "eliminarUsuario",
+            data: {
+                idUsuario: idUsuario
+            },
+            success: function (data) {
+            	TablaUsuarios();
+            },
+            error: function(){
+            	
+            },
+            	async: true, 
+            	cache: false 
+        });
+			
+	}
+	
+	function actualizaUsuario(id) {
+		var idUsuario = $(id).data('value');
+		console.log("Actualizando....",idUsuario);
+		TablaUsuarios();
+		}
 </script>
 </html>

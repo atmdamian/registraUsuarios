@@ -36,4 +36,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarioDao.findOne(idUsuario);
 	}
 
+	
+
 }

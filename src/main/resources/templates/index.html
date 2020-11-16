@@ -50,7 +50,7 @@
 
 						<div class="form-group col-md-6">
 							<button type="button" id="btn-submit" class="btn btn-primary"
-								onclick="registroUsuario();" >Enviar</button>
+								onclick="registroUsuario();">Enviar</button>
 
 							<!--<input type="submit" value="Enviar">-->
 						</div>
@@ -70,7 +70,7 @@
 					<th scope="coll">Nombre</th>
 					<th scope="coll">Estatus</th>
 					<th scope="coll">Fecha y Hora</th>
-					
+
 				</tr>
 			</thead>
 			<tbody>
@@ -84,12 +84,12 @@
 	$(document).ready(function() {
 		TablaUsuarios()
 	});
-	var nombre;
-	var email;
-	var estatus;
+	
 
 	function registroUsuario() {
-		
+		var nombre;
+		var email;
+		var estatus;
 		var datos = {
 			nombre : document.getElementById("nombre").value,
 			email : document.getElementById("email").value,
@@ -105,17 +105,16 @@
 				TablaUsuarios();
 				$(".input").val("");
 			},
-            error: function(){
-            	
-            },
-            	async: true, 
-            	cache: false 
+			error : function() {
+
+			},
+			async : true,
+			cache : false
 		});
 
 	}
 	function TablaUsuarios() {
-		
-	
+
 		$
 				.ajax({
 					url : "/api/reportes/getUsuario",
@@ -128,16 +127,18 @@
 							$("#tableUsuarios tbody").html('');
 						} else {
 							for (var i = 0; i < dataJSON.length; i++) {
-								var idTrNombre = "nombre"+dataJSON[i].id;
-								var idTrEmail = "email"+dataJSON[i].id;
-								var idTrEstatus = "estatus"+dataJSON[i].id;
-								var modificaBtn = "botonModificar"+dataJSON[i].id;
-								var modificaTd = "tdModificar"+dataJSON[i].id;
-								var eliminaBtn = "botonEliminar"+dataJSON[i].id;
+								var idTrNombre = "nombre" + dataJSON[i].id;
+								var idTrEmail = "email" + dataJSON[i].id;
+								var idTrEstatus = "estatus" + dataJSON[i].id;
+								var modificaBtn = "botonModificar"
+										+ dataJSON[i].id;
+								var modificaTd = "tdModificar" + dataJSON[i].id;
+								var eliminaBtn = "botonEliminar"
+										+ dataJSON[i].id;
 								tablaUsuario += '<tr>' + '<td>'
 										+ dataJSON[i].id
 										+ '</td>'
-								        + '<td id='+ idTrNombre +'>'
+										+ '<td id='+ idTrNombre +'>'
 										+ dataJSON[i].nombre
 										+ '</td>'
 										+ '<td id='+ idTrEmail +'>'
@@ -160,12 +161,16 @@
 										+ dataJSON[i].fechaDeRegistro.time.second
 										+ '</td>'
 										+ '<td id='+modificaTd+'>'
-										+ '<a id="'+modificaBtn+'" class="btn btn-primary" onclick="modificarUsuario(this)" data-value="'
+										+ '<a id="'
+										+ modificaBtn
+										+ '" class="btn btn-primary" onclick="modificarUsuario(this)" data-value="'
 										+ dataJSON[i].id
 										+ '">  Editar  </a>'
 										+ '</td>'
 										+ '<td>'
-										+ '<a id="'+eliminaBtn+'" class="btn btn-danger" onclick="eliminarUsuario(this)" data-value="'
+										+ '<a id="'
+										+ eliminaBtn
+										+ '" class="btn btn-danger" onclick="eliminarUsuario(this)" data-value="'
 										+ dataJSON[i].id + '"> Eliminar </a>'
 										+ '</td>'
 
@@ -174,51 +179,63 @@
 							}
 						}
 					},
-		            error: function(){
-		            	
-		            },
-		            	async: true, 
-		            	cache: false 
+					error : function() {
+
+					},
+					async : true,
+					cache : false
 				});
 	}
 
 	function modificarUsuario(id) {
 		var idUsuario = $(id).data('value');
 		$
-		.ajax({
-			url : "/api/reportes/getUsuario",
-			data : {},
-			success : function(data) {
-				var dataJSON = data;
-				dataJSON = JSON.parse(dataJSON);
-				var tablaUsuarioTr = '';
-				if (jQuery.isEmptyObject(dataJSON)) {
-					$("#tableUsuarios tbody").html('');
-				} else {
-					for (var i = 0; i < dataJSON.length; i++) {
-						var indice=dataJSON[i].id;
-						if( indice == idUsuario){
-							
-							$("#nombre"+idUsuario).html('<td><input type="text" id="nombre" value="'+dataJSON[i].nombre+'"><td/>');
-							$("#email"+idUsuario).html('<td><input type="text" id="email" value="'+dataJSON[i].email+'"><td/>');
-							$("#estatus"+idUsuario).html('<td><input type="text" id="estatus" value="'+dataJSON[i].estatus+'"><td/>');
-							$("#tdModificar"+idUsuario).html('<a class="btn btn-success" onclick="actualizaUsuario(this);" data-value="'+ dataJSON[i].id+'">  Guardar </a>');
-							$('#botonEliminar'+idUsuario).attr("disabled", true);
+				.ajax({
+					url : "/api/reportes/getUsuario",
+					data : {},
+					success : function(data) {
+						var dataJSON = data;
+						dataJSON = JSON.parse(dataJSON);
+						var tablaUsuarioTr = '';
+						if (jQuery.isEmptyObject(dataJSON)) {
+							$("#tableUsuarios tbody").html('');
+						} else {
+							for (var i = 0; i < dataJSON.length; i++) {
+								var indice = dataJSON[i].id;
+								if (indice == idUsuario) {
 
-						}else{
-							$('#botonModificar'+indice).attr("disabled", true);
-							$('#botonEliminar'+indice).attr("disabled", true);
+									$("#nombre" + idUsuario)
+											.html(
+													'<input type="text" name="innombre'+idUsuario+'" id="innombre'+idUsuario+'" value="'+dataJSON[i].nombre+'">');
+									$("#email" + idUsuario)
+											.html(
+													'<input type="email" name="inemail'+idUsuario+'" id="inemail'+idUsuario+'" value="'+dataJSON[i].email+'">');
+									$("#estatus" + idUsuario)
+											.html(
+													'<input type="text" name="inestatus'+idUsuario+'" id="inestatus'+idUsuario+'" value="'+dataJSON[i].estatus+'">');
+									$("#tdModificar" + idUsuario).html(
+											'<a class="btn btn-success" onclick="actualizaUsuario(this);" data-value="'
+													+ dataJSON[i].id
+													+ '">  Guardar </a>');
+									$('#botonEliminar' + idUsuario).attr(
+											"disabled", true);
+
+								} else {
+									$('#botonModificar' + indice).attr(
+											"disabled", true);
+									$('#botonEliminar' + indice).attr(
+											"disabled", true);
+								}
+
+							}
 						}
-						
-					}
-				}
-			},
-            error: function(){
-            	
-            },
-            	async: true, 
-            	cache: false 
-		});
+					},
+					error : function() {
+
+					},
+					async : true,
+					cache : false
+				});
 
 	}
 	function eliminarUsuario(id) {
@@ -226,26 +243,56 @@
 		console.log("Eliminar", idUsuario);
 		$.ajax({
 			type : "GET",
-            url: "eliminarUsuario",
-            data: {
-                idUsuario: idUsuario
-            },
-            success: function (data) {
-            	TablaUsuarios();
-            },
-            error: function(){
-            	
-            },
-            	async: true, 
-            	cache: false 
-        });
-			
+			url : "eliminarUsuario",
+			data : {
+				idUsuario : idUsuario
+			},
+			success : function(data) {
+				TablaUsuarios();
+			},
+			error : function() {
+
+			},
+			async : true,
+			cache : false
+		});
+
 	}
-	
+
 	function actualizaUsuario(id) {
 		var idUsuario = $(id).data('value');
-		console.log("Actualizando....",idUsuario);
-		TablaUsuarios();
-		}
+		var id;
+		var nombre;
+		var email;
+		var estatus;
+		var idNombre = "innombre"+idUsuario;
+		var idEmail = "inemail"+idUsuario;
+		var idEstatus = "inestatus"+idUsuario;
+		console.log("Actualizando....", idNombre, " ", idEmail, " ", idEstatus);
+
+		var datos = {
+				id : idUsuario,
+				nombre : document.getElementById(idNombre).value,
+				email : document.getElementById(idEmail).value,
+				estatus : document.getElementById(idEstatus).value
+			};
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			//dataType : 'json',
+			url : "postRegistrarUsuario",
+			data : JSON.stringify(datos),
+			success : function(response) {
+				TablaUsuarios();
+				$(".input").val("");
+			},
+			error : function() {
+
+			},
+			async : true,
+			cache : false
+		});
+
+	}
 </script>
 </html>

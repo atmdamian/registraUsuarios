@@ -9,10 +9,8 @@ public interface UsuarioDao {
 
 	public void save(Usuario usuario);
 
-	public void update(Usuario usuario);
-
 	public void delete(Integer idUsuario);
-	
+
 	public Usuario findOne(Integer idUsuario);
 
 }

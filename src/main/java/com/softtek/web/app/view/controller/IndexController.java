@@ -8,12 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,31 +42,20 @@ public class IndexController {
 	}
 
 	@PostMapping(value = "/postRegistrarUsuario", consumes = "application/json")
-	public @ResponseBody String registraUsuario(@RequestBody @Valid Usuario usuario, BindingResult resultado,
-			Model model) {
+	public @ResponseBody String registraUsuario(@RequestBody Usuario usuario, Model model) {
 		LocalDateTime tiempoActual = LocalDateTime.now();
-		if (resultado.hasErrors()) {
-			Map<String, String> errores = new HashMap<>();
-			resultado.getFieldErrors().forEach(err -> {
-				errores.put(err.getField(),
-						"El camp".concat(err.getField()).concat(" ").concat(err.getDefaultMessage()));
-			});
-			model.addAttribute("error", errores);
-			return "/index";
-		}
+
 		usuario.setFechaDeRegistro(tiempoActual);
 		usuarioService.save(usuario);
 
 		return "/index";
 	}
-	
+
 	@GetMapping(value = "/eliminarUsuario")
-	public @ResponseBody void elimnarUsuario(@RequestParam Integer idUsuario,Model model) {
+	public @ResponseBody void elimnarUsuario(@RequestParam Integer idUsuario, Model model) {
 		usuarioService.delete(idUsuario);
 	}
-	
-	
-	
+
 	@GetMapping(value = "exportarReporte")
 	public void exportPDF(ModelAndView model, HttpServletResponse response) throws JRException, IOException {
 

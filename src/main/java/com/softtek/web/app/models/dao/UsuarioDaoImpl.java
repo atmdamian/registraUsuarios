@@ -1,6 +1,5 @@
 package com.softtek.web.app.models.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,45 +26,20 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	@Override
 	@Transactional
 	public void save(Usuario usuario) {
-		//try {
-		   //em.getTransaction().begin();
-		      em.persist(usuario);
-		   //em.getTransaction().commit();
-		  //}
-		  //finally {
-		    //if (em.getTransaction().isActive())
-		    //em.getTransaction().rollback();
-		 // }
-		
-	}
-
-	@Override
-	@Transactional
-	public void update(Usuario usuario) {
-		try {
-			em.getTransaction().begin();
+		if (usuario.getId() != null && usuario.getId() > 0) {
 			em.merge(usuario);
-			em.getTransaction().commit();
-		}finally {
-			if(em.getTransaction().isActive())
-				em.getTransaction().rollback();
+		}else{
+			em.persist(usuario);
 		}
-		
+
 	}
 
 	@Override
 	@Transactional
 	public void delete(Integer idUsuario) {
-		//try {
-			Usuario usuarioEliminar = em.find(Usuario.class, idUsuario);
-			//em.getTransaction().begin();
-			em.remove(usuarioEliminar);
-			//em.getTransaction().commit();
-			
-		//}finally {
-			//em.getTransaction().isActive();
-			//em.getTransaction().rollback();
-		//}
+		Usuario usuarioEliminar = em.find(Usuario.class, idUsuario);
+		em.remove(usuarioEliminar);
+
 	}
 
 	@Override

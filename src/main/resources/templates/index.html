@@ -3,8 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <title th:text="${titulo}"></title>
-<link rel="stylesheet" href="./css/bootstrap.css">
+<!-- link rel="stylesheet" href="./css/bootstrap.css"-->
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+	crossorigin="anonymous"></script>
+
 </head>
 <body>
 	<h1>Spring boot Softtek</h1>
@@ -84,6 +98,56 @@
 			</tbody>
 		</table>
 	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Modal Header</h4>
+				</div>
+				<div class="modal-body">
+					<p id="msj">Some text in the modal.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog"
+		aria-labelledby="mySmallModalLabel" aria-hidden="true" id="mi-modal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!--button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button-->
+					<!--h4 class="modal-title" id="myModalLabel">Confirmar></h4-->
+					<p id="msjModal">Mensaje</p>
+				</div>
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-default" id="modal-btn-si">
+						<p id="si">Si</p>
+					</button>
+					<button type="button" onclick="TablaUsuarios();" class="btn btn-primary" id="modal-btn-no">
+						<p id="no">No</p>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="alert" role="alert" id="result"></div>
+
+
+
+
 </body>
 
 <script type="text/javascript">
@@ -119,7 +183,7 @@
 
 	}
 	function TablaUsuarios() {
-
+	console.log("Actualiza tabla");
 		$
 				.ajax({
 					url : "/api/reportes/getUsuario",
@@ -166,18 +230,18 @@
 										+ dataJSON[i].fechaDeRegistro.time.second
 										+ '</td>'
 										+ '<td id='+modificaTd+'>'
-										+ '<a id="'
+										+ '<button id="'
 										+ modificaBtn
 										+ '" class="btn btn-primary" onclick="modificarUsuario(this)" data-value="'
 										+ dataJSON[i].id
-										+ '">  Editar  </a>'
+										+ '">  Editar  </button>'
 										+ '</td>'
 										+ '<td>'
-										+ '<a id="'
+										+ '<button id="'
 										+ eliminaBtn
 										+ '" class="btn btn-danger" onclick="eliminarUsuario(this)" data-value="'
-										+ dataJSON[i].id + '"> Eliminar </a>'
-										+ '</td>'
+										+ dataJSON[i].id
+										+ '"> Eliminar </button>' + '</td>'
 
 										+ '</tr>';
 								$("#tableUsuarios tbody").html(tablaUsuario);
@@ -218,10 +282,11 @@
 									$("#estatus" + idUsuario)
 											.html(
 													'<input type="text" name="inestatus'+idUsuario+'" id="inestatus'+idUsuario+'" value="'+dataJSON[i].estatus+'">');
-									$("#tdModificar" + idUsuario).html(
-											'<a class="btn btn-success" onclick="actualizaUsuario(this);" data-value="'
-													+ dataJSON[i].id
-													+ '">  Guardar </a>');
+									$("#tdModificar" + idUsuario)
+											.html(
+													'<button class="btn btn-success" onclick="actualizaUsuario(this);" data-value="'
+															+ dataJSON[i].id
+															+ '">  Guardar </button>');
 									$('#botonEliminar' + idUsuario).attr(
 											"disabled", true);
 
@@ -244,8 +309,7 @@
 
 	}
 	function eliminarUsuario(id) {
-		var idUsuario = $(id).data('value');
-		console.log("Eliminar", idUsuario);
+		var idUsuario = $(id).data('value');		
 		$.ajax({
 			type : "GET",
 			url : "eliminarUsuario",
@@ -253,14 +317,15 @@
 				idUsuario : idUsuario
 			},
 			success : function(data) {
-				TablaUsuarios();
+				TablaUsuarios();			
 			},
 			error : function() {
 
 			},
-			async : true,
+			async : false,
 			cache : false
 		});
+		
 
 	}
 
@@ -303,19 +368,65 @@
 	function validarInputs() {
 		if ($("#nombre").val() == '') {
 			$("#nombre").css("background-color", "pink");
-			alert("Ingresa nombre completo");
+			$("#mi-modal").modal('show');
+			$("#modal-btn-no").hide();
+			$("#msjModal").text('Ingrese un Nombre');
+			$("#si").text('Aceptar');
+
+			$("#modal-btn-si").on("click", function() {
+				$("#mi-modal").modal('hide');
+			});
 			return false;
 		}
 		if ($("#email").val().indexOf('@', 0) == -1
 				|| $("#email").val().indexOf('.', 0) == -1) {
 			$("#email").css("background-color", "pink");
-
-			alert('Ingre un correcto valido.');
+			$("#nombre").css("background-color", "");
+			$("#mi-modal").modal('show');
+			$("#modal-btn-no").hide();
+			$("#msjModal").text('Ingrese un Correo valido');
+			$("#si").text('Aceptar');
+			$("#modal-btn-si").on("click", function() {
+				$("#mi-modal").modal('hide');
+			});
 			return false;
 		}
 		$("#nombre").css("background-color", "");
 		$("#email").css("background-color", "");
 		registroUsuario();
+
+	}
+
+	function confirmarEliminar(id) {
+		
+		console.log("Datos eliminados", idUsuario)
+		TablaUsuarios();
+		 
+		var modalConfirm = function(callback) {
+			$("#mi-modal").modal('show');
+			$("#msjModal").text('¿Desea Eliminar el Usuario? ');
+			$("#modal-btn-no").show();
+			$("#si").text('SI');
+			$("#no").text('NO');
+			
+			$("#modal-btn-si").on("click", function() {
+				var idsEliminar = [];
+				idsEliminar.push(id)
+				callback(true, idsEliminar);
+				$("#mi-modal").modal('hide');
+			});
+
+			$("#modal-btn-no").on("click", function() {
+				console.log("no callback")
+				$("#mi-modal").modal('hide');
+			});
+		};
+
+		modalConfirm(function(confirm, idsEliminar) {
+			if (confirm) {
+				eliminarUsuario(true,idsEliminar);	
+			}
+		});
 
 	}
 </script>

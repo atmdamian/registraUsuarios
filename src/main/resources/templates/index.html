@@ -40,8 +40,8 @@
 						<div>
 
 							<div>
-								<label for="estatus">Estatus:</label> <select name="estatus"
-									id="estatus">
+								<label for="estatus">Estatus:</label> 
+								<select name="estatus" id="estatus">
 									<option selected="true" disabled="disabled" value="0">SELECCIONA
 										ESTATUS</option>
 									<option value="ACTIVO">ACTIVO</option>
@@ -242,12 +242,26 @@
 									$("#email" + idUsuario)
 											.html(
 													'<input type="email" name="inemail'+idUsuario+'" id="inemail'+idUsuario+'" value="'+dataJSON[i].email+'">');
+							
 									$("#estatus" + idUsuario)
 											.html(
-													'<input type="text" name="inestatus'+idUsuario+'" id="inestatus'+idUsuario+'" value="'+dataJSON[i].estatus+'">');
+													
+													'<select name="inestatus'+idUsuario+'" id="inestatus'+idUsuario+'">'
+													+'<option selected="true" disabled="disabled" value="'+dataJSON[i].estatus+'">'+dataJSON[i].estatus+'</option>'
+													+'<option id="estatusACTIVO" value="ACTIVO">ACTIVO</option>'
+													+'<option id="estatusINACTIVO" value="INACTIVO">INACTIVO</option>'
+													+'<option id="estatusSUSPENDIDO" value="SUSPENDIDO">SUSPENDIDO</option>'
+												    +'</select>'
+											
+											
+											
+											);
+									
+									
+
 									$("#tdModificar" + idUsuario)
 											.html(
-													'<button class="btn btn-success" onclick="actualizaUsuario(this);" data-value="'
+													'<button class="btn btn-success" onclick="validarInputsGuardar(this);" data-value="'
 															+ dataJSON[i].id
 															+ '">  Guardar </button>');
 									$('#botonEliminar' + idUsuario).attr(
@@ -259,7 +273,7 @@
 									$('#botonEliminar' + indice).attr(
 											"disabled", true);
 								}
-
+								$('#inestatus'+idUsuario+' option[id="estatus'+dataJSON[i].estatus+'"]').remove();
 							}
 						}
 					},
@@ -292,7 +306,7 @@
 	}
 
 	function actualizaUsuario(id) {
-		var idUsuario = $(id).data('value');
+		var idUsuario = id;
 		var id;
 		var nombre;
 		var email;
@@ -300,7 +314,6 @@
 		var idNombre = "innombre" + idUsuario;
 		var idEmail = "inemail" + idUsuario;
 		var idEstatus = "inestatus" + idUsuario;
-		console.log("Actualizando....", idNombre, " ", idEmail, " ", idEstatus);
 
 		var datos = {
 			id : idUsuario,
@@ -371,7 +384,9 @@
 		registroUsuario();
 
 	}
-
+	
+	
+	
 	function confirmarEliminar(id) {
 		var idUsuario = $(id).data('value');
 		console.log("Datos eliminados", idUsuario)
@@ -406,5 +421,45 @@
 		});
 
 	}
+	
+	function validarInputsGuardar(id) {
+		var idUsuario = $(id).data('value');
+		var idNombre = "#innombre" + idUsuario;
+		var idEmail = "#inemail" + idUsuario;
+		var idEstatus = "#inestatus" + idUsuario;
+		if ($(idNombre).val() == '') {
+			$(idNombre).css("background-color", "pink");
+			$("#mi-modal").modal('show');
+			$("#modal-btn-no").hide();
+			$("#msjModal").text('Ingrese un Nombre a Guardar');
+			$("#si").text('Aceptar');
+
+			$("#modal-btn-si").on("click", function() {
+				$("#mi-modal").modal('hide');
+			});
+			return false;
+		}
+		if ($(idEmail).val().indexOf('@', 0) == -1
+				|| $(idEmail).val().indexOf('.', 0) == -1) {
+			$(idEmail).css("background-color", "pink");
+			$(idNombre).css("background-color", "");
+			$("#mi-modal").modal('show');
+			$("#modal-btn-no").hide();
+			$("#msjModal").text('Ingrese  un Correo valido a Guardar ');
+			$("#si").text('Aceptar');
+			$("#modal-btn-si").on("click", function() {
+				$("#mi-modal").modal('hide');
+			});
+			return false;
+		}
+
+		
+		$(idNombre).css("background-color", "");
+		$(idEmail).css("background-color", "");
+		$(idEstatus).css("background-color", "");
+		actualizaUsuario(idUsuario);
+
+	}
+
 </script>
 </html>

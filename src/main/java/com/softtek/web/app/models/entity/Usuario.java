@@ -1,10 +1,9 @@
 package com.softtek.web.app.models.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,9 +28,10 @@ public class Usuario implements Serializable {
 	private String nombre;
 	@NotEmpty
 	private String email;
+
 	@Column(name = "fecha_registro")
-	@Convert(converter = LocalDateTimeAttributeConverter.class)
-	private LocalDateTime fechaDeRegistro;
+	// @Convert(converter = LocalDateTimeAttributeConverter.class)
+	private Timestamp fechaDeRegistro;
 
 	@Enumerated(EnumType.STRING)
 	private Estatus estatus;
@@ -60,11 +60,11 @@ public class Usuario implements Serializable {
 		this.email = email;
 	}
 
-	public LocalDateTime getFechaDeRegistro() {
+	public Timestamp getFechaDeRegistro() {
 		return fechaDeRegistro;
 	}
 
-	public void setFechaDeRegistro(LocalDateTime fechaDeRegistro) {
+	public void setFechaDeRegistro(Timestamp fechaDeRegistro) {
 		this.fechaDeRegistro = fechaDeRegistro;
 	}
 

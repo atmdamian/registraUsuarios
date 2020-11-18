@@ -54,6 +54,7 @@
 							<div>
 								<label for="estatus">Estatus:</label> <select name="estatus"
 									id="estatus">
+									<option selected="true" disabled="disabled" value="0">SELECCIONA ESTATUS</option>
 									<option value="ACTIVO">ACTIVO</option>
 									<option value="INACTIVO">INACTIVO</option>
 									<option value="SUSPENDIDO">SUSPENDIDO</option>
@@ -189,6 +190,7 @@
 					url : "/api/reportes/getUsuario",
 					data : {},
 					success : function(data) {
+						console.log(data);
 						var dataJSON = data;
 						dataJSON = JSON.parse(dataJSON);
 						var tablaUsuario = '';
@@ -217,17 +219,7 @@
 										+ dataJSON[i].estatus
 										+ '</td>'
 										+ '<td>'
-										+ dataJSON[i].fechaDeRegistro.date.year
-										+ "/"
-										+ dataJSON[i].fechaDeRegistro.date.month
-										+ "/"
-										+ dataJSON[i].fechaDeRegistro.date.day
-										+ " "
-										+ dataJSON[i].fechaDeRegistro.time.hour
-										+ ":"
-										+ dataJSON[i].fechaDeRegistro.time.minute
-										+ ":"
-										+ dataJSON[i].fechaDeRegistro.time.second
+										+ dataJSON[i].fechaDeRegistro										
 										+ '</td>'
 										+ '<td id='+modificaTd+'>'
 										+ '<button id="'
@@ -239,7 +231,7 @@
 										+ '<td>'
 										+ '<button id="'
 										+ eliminaBtn
-										+ '" class="btn btn-danger" onclick="eliminarUsuario(this)" data-value="'
+										+ '" class="btn btn-danger" onclick="confirmarEliminar(this)" data-value="'
 										+ dataJSON[i].id
 										+ '"> Eliminar </button>' + '</td>'
 
@@ -388,17 +380,30 @@
 			$("#si").text('Aceptar');
 			$("#modal-btn-si").on("click", function() {
 				$("#mi-modal").modal('hide');
-			});
+			});			
+			return false;
+		}
+		if($("#estatus option:selected").val() == '0'){
+			$("#estatus").css("background-color", "pink");
+			$("#email").css("background-color", "");
+			$("#mi-modal").modal('show');
+			$("#modal-btn-no").hide();
+			$("#msjModal").text('Ingrese un Estatus');
+			$("#si").text('Aceptar');
+			$("#modal-btn-si").on("click", function() {
+				$("#mi-modal").modal('hide');
+			});	
 			return false;
 		}
 		$("#nombre").css("background-color", "");
 		$("#email").css("background-color", "");
+		$("#estatus").css("background-color", "");
 		registroUsuario();
 
 	}
 
 	function confirmarEliminar(id) {
-		
+		var idUsuario = $(id).data('value');
 		console.log("Datos eliminados", idUsuario)
 		TablaUsuarios();
 		 
@@ -410,21 +415,23 @@
 			$("#no").text('NO');
 			
 			$("#modal-btn-si").on("click", function() {
-				var idsEliminar = [];
-				idsEliminar.push(id)
-				callback(true, idsEliminar);
+				var idsEliminar = new Array();
+				idsEliminar.push(idUsuario);
+				console.log("usuario eliminar", idsEliminar );
+				callback(true);
 				$("#mi-modal").modal('hide');
 			});
 
 			$("#modal-btn-no").on("click", function() {
 				console.log("no callback")
+				callback(false);
 				$("#mi-modal").modal('hide');
 			});
 		};
 
-		modalConfirm(function(confirm, idsEliminar) {
+		modalConfirm(function(confirm) {
 			if (confirm) {
-				eliminarUsuario(true,idsEliminar);	
+				eliminarUsuario(idsEliminar);	
 			}
 		});
 

@@ -3,6 +3,7 @@ package com.softtek.web.app.view.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +52,9 @@ public class IndexController {
 	@PostMapping(value = "/postRegistrarUsuario", consumes = "application/json")
 	public @ResponseBody String registraUsuario(@RequestBody Usuario usuario, Model model) {
 		LocalDateTime tiempoActual = LocalDateTime.now();
-
+		Timestamp timestamp = Timestamp.valueOf(tiempoActual);
 		LOGGER.info("REGISTRA USUARIO");
-		usuario.setFechaDeRegistro(tiempoActual);
+		usuario.setFechaDeRegistro(timestamp);
 		usuarioService.save(usuario);
 
 		return "/index";

@@ -28,7 +28,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	public void save(Usuario usuario) {
 		if (usuario.getId() != null && usuario.getId() > 0) {
 			em.merge(usuario);
-		}else{
+		} else {
 			em.persist(usuario);
 		}
 

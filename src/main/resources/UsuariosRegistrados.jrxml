@@ -17,7 +17,7 @@
 		<property name="net.sf.jasperreports.json.field.expression" value="email"/>
 		<fieldDescription><![CDATA[email]]></fieldDescription>
 	</field>
-	<field name="fechaDeRegistro" class="java.time.LocalDateTime">
+	<field name="fechaDeRegistro" class="java.sql.Timestamp">
 		<property name="net.sf.jasperreports.json.field.expression" value="fechaDeRegistro"/>
 		<fieldDescription><![CDATA[fechaDeRegistro]]></fieldDescription>
 	</field>

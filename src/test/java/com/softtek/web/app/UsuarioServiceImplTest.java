@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.softtek.web.app.models.dao.UsuarioDao;
 import com.softtek.web.app.models.entity.Usuario;

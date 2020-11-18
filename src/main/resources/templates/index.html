@@ -3,28 +3,16 @@
 <head>
 <meta charset="UTF-8" />
 <title th:text="${titulo}"></title>
-<!-- link rel="stylesheet" href="./css/bootstrap.css"-->
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	crossorigin="anonymous">
-
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-	crossorigin="anonymous"></script>
-
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<script src="./js/jquery-3.3.1.js"></script>
+<script src="./js/popper.min.js"></script>
+<script src="bootstrap.min.js"></script>
 </head>
 <body>
-	<h1>Spring boot Softtek</h1>
+	
 	<div class="container">
 		<div class="jumbotron">
-			<h1>Registra Usuarios</h1>
+			<h1>Registrar Usuarios</h1>
 		</div>
 		<div class="container">
 			<div class="card">
@@ -54,7 +42,8 @@
 							<div>
 								<label for="estatus">Estatus:</label> <select name="estatus"
 									id="estatus">
-									<option selected="true" disabled="disabled" value="0">SELECCIONA ESTATUS</option>
+									<option selected="true" disabled="disabled" value="0">SELECCIONA
+										ESTATUS</option>
 									<option value="ACTIVO">ACTIVO</option>
 									<option value="INACTIVO">INACTIVO</option>
 									<option value="SUSPENDIDO">SUSPENDIDO</option>
@@ -68,13 +57,12 @@
 							<button type="button" id="btn-submit" class="btn btn-primary"
 								onclick="validarInputs();">Enviar</button>
 
-							<!--<input type="submit" value="Enviar">-->
-						</div>
-						<div class="form-group col-md-6">
 							<a href="http://localhost:8080/exportarReporte"
 								class="btn btn-primary">Exportar PDF</a>
 							<!--<input type="submit" value="Enviar">-->
+							<!--<input type="submit" value="Enviar">-->
 						</div>
+						<div class="form-group col-md-6"></div>
 					</form>
 				</div>
 			</div>
@@ -84,14 +72,15 @@
 
 	<div class="container">
 		<table id="tableUsuarios" class="table table-bordered table-striped">
-			<thead clas="thead-light">
+			<thead class="thead-light">
 				<tr>
-					<th scope="coll">ID</th>
-					<th scope="coll">Email</th>
-					<th scope="coll">Nombre</th>
-					<th scope="coll">Estatus</th>
-					<th scope="coll">Fecha y Hora</th>
-
+					<th>ID</th>
+					<th>Nombre</th>
+					<th>Email</th>
+					<th>Estatus</th>
+					<th>Fecha y Hora</th>
+					<th> </th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -101,26 +90,7 @@
 	</div>
 
 
-	<!-- Modal -->
-	<div class="modal fade" id="myModal" role="dialog">
-		<div class="modal-dialog">
 
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Modal Header</h4>
-				</div>
-				<div class="modal-body">
-					<p id="msj">Some text in the modal.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
 
 	<div class="modal fade" tabindex="-1" role="dialog"
 		aria-labelledby="mySmallModalLabel" aria-hidden="true" id="mi-modal">
@@ -136,7 +106,8 @@
 					<button type="button" class="btn btn-default" id="modal-btn-si">
 						<p id="si">Si</p>
 					</button>
-					<button type="button" onclick="TablaUsuarios();" class="btn btn-primary" id="modal-btn-no">
+					<button type="button" onclick="TablaUsuarios();"
+						class="btn btn-primary" id="modal-btn-no">
 						<p id="no">No</p>
 					</button>
 				</div>
@@ -184,7 +155,7 @@
 
 	}
 	function TablaUsuarios() {
-	console.log("Actualiza tabla");
+		console.log("Actualiza tabla");
 		$
 				.ajax({
 					url : "/api/reportes/getUsuario",
@@ -219,7 +190,7 @@
 										+ dataJSON[i].estatus
 										+ '</td>'
 										+ '<td>'
-										+ dataJSON[i].fechaDeRegistro										
+										+ dataJSON[i].fechaDeRegistro
 										+ '</td>'
 										+ '<td id='+modificaTd+'>'
 										+ '<button id="'
@@ -301,7 +272,7 @@
 
 	}
 	function eliminarUsuario(id) {
-		var idUsuario = $(id).data('value');		
+		var idUsuario = $(id).data('value');
 		$.ajax({
 			type : "GET",
 			url : "eliminarUsuario",
@@ -309,7 +280,7 @@
 				idUsuario : idUsuario
 			},
 			success : function(data) {
-				TablaUsuarios();			
+				TablaUsuarios();
 			},
 			error : function() {
 
@@ -317,7 +288,6 @@
 			async : false,
 			cache : false
 		});
-		
 
 	}
 
@@ -380,10 +350,10 @@
 			$("#si").text('Aceptar');
 			$("#modal-btn-si").on("click", function() {
 				$("#mi-modal").modal('hide');
-			});			
+			});
 			return false;
 		}
-		if($("#estatus option:selected").val() == '0'){
+		if ($("#estatus option:selected").val() == '0') {
 			$("#estatus").css("background-color", "pink");
 			$("#email").css("background-color", "");
 			$("#mi-modal").modal('show');
@@ -392,7 +362,7 @@
 			$("#si").text('Aceptar');
 			$("#modal-btn-si").on("click", function() {
 				$("#mi-modal").modal('hide');
-			});	
+			});
 			return false;
 		}
 		$("#nombre").css("background-color", "");
@@ -406,18 +376,18 @@
 		var idUsuario = $(id).data('value');
 		console.log("Datos eliminados", idUsuario)
 		TablaUsuarios();
-		 
+
 		var modalConfirm = function(callback) {
 			$("#mi-modal").modal('show');
 			$("#msjModal").text('¿Desea Eliminar el Usuario? ');
 			$("#modal-btn-no").show();
 			$("#si").text('SI');
 			$("#no").text('NO');
-			
+
 			$("#modal-btn-si").on("click", function() {
 				var idsEliminar = new Array();
 				idsEliminar.push(idUsuario);
-				console.log("usuario eliminar", idsEliminar );
+				console.log("usuario eliminar", idsEliminar);
 				callback(true);
 				$("#mi-modal").modal('hide');
 			});
@@ -431,7 +401,7 @@
 
 		modalConfirm(function(confirm) {
 			if (confirm) {
-				eliminarUsuario(idsEliminar);	
+				eliminarUsuario(idsEliminar);
 			}
 		});
 
